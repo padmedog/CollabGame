@@ -10,11 +10,15 @@
   <sprites name="sprites"/>
   <backgrounds name="background"/>
   <paths name="paths"/>
+  <scripts name="scripts">
+    <script>scripts\find_intersect.gml</script>
+    <script>scripts\find_sides.gml</script>
+  </scripts>
   <objects name="objects">
     <object>objects\obj_audiotest</object>
   </objects>
   <rooms name="rooms">
-    <room>rooms\room0</room>
+    <room>rooms\rm_audiotest</room>
   </rooms>
   <help>
     <rtf>help.rtf</rtf>
