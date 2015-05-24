@@ -7,12 +7,15 @@
   <sounds name="sound">
     <sound>sound\snd_audiotest</sound>
   </sounds>
-  <sprites name="sprites"/>
+  <sprites name="sprites">
+    <sprite>sprites\spr_block</sprite>
+  </sprites>
   <backgrounds name="background"/>
   <paths name="paths"/>
   <scripts name="scripts">
     <script>scripts\find_intersect.gml</script>
     <script>scripts\find_sides.gml</script>
+    <script>scripts\find_intersect_source.gml</script>
   </scripts>
   <objects name="objects">
     <object>objects\obj_audiotest</object>
