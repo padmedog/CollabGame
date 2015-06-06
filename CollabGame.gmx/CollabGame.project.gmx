@@ -11,8 +11,13 @@
     <sprite>sprites\spr_blockdebris</sprite>
     <sprite>sprites\spr_grenade</sprite>
     <sprite>sprites\spr_explosion</sprite>
+    <sprite>sprites\spr_player_legs</sprite>
+    <sprite>sprites\spr_player_arms</sprite>
+    <sprite>sprites\spr_player_head</sprite>
   </sprites>
-  <backgrounds name="background"/>
+  <backgrounds name="background">
+    <background>background\bg_test</background>
+  </backgrounds>
   <paths name="paths"/>
   <objects name="objects">
     <object>objects\obj_player</object>
@@ -20,6 +25,7 @@
     <object>objects\obj_block</object>
     <object>objects\obj_block_debris</object>
     <object>objects\obj_explosion</object>
+    <object>objects\obj_view</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rm_main</room>

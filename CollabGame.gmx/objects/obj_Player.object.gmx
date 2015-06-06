@@ -27,6 +27,11 @@
             <kind>1</kind>
             <string>xspeed = 0;
 yspeed = 0;
+dir = 0;
+arm_index = 0;
+arm_maxindex = sprite_get_number(spr_player_arms)-1;
+arm_dir = 0;
+leg_dir = 0;
 </string>
           </argument>
         </arguments>
@@ -49,16 +54,24 @@ yspeed = 0;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>xspeed = (keyboard_check(vk_right)-keyboard_check(vk_left))*8;
-yspeed = (keyboard_check(vk_down)-keyboard_check(vk_up))*8;
-if(!place_meeting(x+xspeed,y,obj_block))
+            <string>xspeed += (keyboard_check(vk_right)-keyboard_check(vk_left));
+yspeed += (keyboard_check(vk_down)-keyboard_check(vk_up));
+while(place_meeting(x+xspeed,y,obj_block))
 {
-    x += xspeed;
+    xspeed -= sign(xspeed);
 }
-if(!place_meeting(x,y+yspeed,obj_block))
+while(place_meeting(x,y+yspeed,obj_block))
 {
-    y += yspeed;
+    yspeed -= sign(yspeed);
 }
+x += xspeed;
+y += yspeed;
+xspeed /= 1.6;
+yspeed /= 1.6;
+if(xspeed &gt; 8) xspeed = 8;
+if(yspeed &gt; 8) yspeed = 8;
+if(xspeed &lt; -8) xspeed = -8;
+if(yspeed &lt; -8) yspeed = -8;
 if(mouse_check_button_pressed(mb_left))
 {
     var inst = instance_create(x,y,obj_grenade);
@@ -70,6 +83,9 @@ if(mouse_check_button_pressed(mb_left))
         image_angle = _dir;
     }
 }
+dir = point_direction(x,y,mouse_x,mouse_y);
+arm_dir += angle_difference(arm_dir,dir)/2;
+leg_dir += angle_difference(leg_dir,arm_dir)/2;
 if(x &gt; room_width) x -= room_width;
 if(x &lt; 0) x += room_width;
 if(y &gt; room_height) y -= room_height;
