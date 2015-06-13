@@ -66,8 +66,8 @@ while(place_meeting(x,y+yspeed,obj_block))
 }
 x += xspeed;
 y += yspeed;
-xspeed /= 1.6;
-yspeed /= 1.6;
+xspeed /= 1.5;
+yspeed /= 1.5;
 if(xspeed &gt; 8) xspeed = 8;
 if(yspeed &gt; 8) yspeed = 8;
 if(xspeed &lt; -8) xspeed = -8;
@@ -84,12 +84,47 @@ if(mouse_check_button_pressed(mb_left))
     }
 }
 dir = point_direction(x,y,mouse_x,mouse_y);
-arm_dir += angle_difference(arm_dir,dir)/2;
-leg_dir += angle_difference(leg_dir,arm_dir)/2;
+arm_dir = dir+(angle_difference(arm_dir,dir)/2);
+leg_dir = dir+(angle_difference(leg_dir,arm_dir)/2);
+var can_move_ = xspeed &gt; 1.5 || yspeed &gt; 1.5 || xspeed &lt; -1.5 || yspeed &lt; -1.5;
+if(can_move_ || arm_index &gt; 0)
+{
+    arm_index++;
+    if(arm_index &gt;= arm_maxindex)
+    {
+        arm_index -= arm_maxindex;
+    }
+}
 if(x &gt; room_width) x -= room_width;
 if(x &lt; 0) x += room_width;
 if(y &gt; room_height) y -= room_height;
 if(y &lt; 0) y += room_height;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>draw_sprite_ext(spr_player_legs,arm_index,x,y,image_xscale,image_yscale,leg_dir,image_blend,image_alpha);
+draw_sprite_ext(spr_player_arms,arm_index,x,y,image_xscale,image_yscale,arm_dir,image_blend,image_alpha);
+draw_sprite_ext(spr_player_head,image_index,x,y,image_xscale,image_yscale,dir,image_blend,image_alpha);
+//draw_text(x+32,y,"xspeed: " + string(xspeed) + "#yspeed: " + string(yspeed));
 </string>
           </argument>
         </arguments>

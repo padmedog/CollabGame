@@ -76,7 +76,7 @@ instance_destroy();
           <argument>
             <kind>1</kind>
             <string>angle += spd*100;
-image_angle = angle;
+image_angle = dir;
 spd -= sign(spd);
 xspeed = lengthdir_x(spd,dir);
 yspeed = lengthdir_y(spd,dir);
@@ -84,22 +84,22 @@ var bounce_horiz = false;
 var bounce_verti = false;
 var orig_xspd = xspeed;
 var orig_yspd = yspeed;
-var count = 0;
-while(place_meeting(x+xspeed,y,obj_block))
+//var count = 0;
+if(place_meeting(x+xspeed,y,obj_block))
 {
     bounce_horiz = true;
     xspeed -= sign(xspeed);
-    count++;
-    if(count &gt; orig_xspd) break;
+//    count++;
+//    if(count &gt; orig_xspd) break;
 }
 if(bounce_horiz) xspeed = -xspeed;
-count = 0;
-while(place_meeting(x,y+yspeed,obj_block))
+//count = 0;
+if(place_meeting(x,y+yspeed,obj_block))
 {
-    bounch_verti = true;
+    bounce_verti = true;
     yspeed -= sign(yspeed);
-    count++;
-    if(count &gt; orig_yspd) break;
+//    count++;
+//    if(count &gt; orig_yspd) break;
 }
 if(bounce_verti) yspeed = -yspeed;
 x += xspeed;
