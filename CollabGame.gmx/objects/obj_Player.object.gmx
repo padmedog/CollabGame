@@ -32,6 +32,15 @@ arm_index = 0;
 arm_maxindex = sprite_get_number(spr_player_arms)-1;
 arm_dir = 0;
 leg_dir = 0;
+inventory_list = ds_list_create();
+/*Items:
+     0 = Grenade
+     1 = Pistol
+     2 = Rifle
+*/
+currentitemslot = 0;
+ds_list_add(inventory_list,1);
+ds_list_add(inventory_list,0);
 </string>
           </argument>
         </arguments>
@@ -74,15 +83,28 @@ if(xspeed &lt; -8) xspeed = -8;
 if(yspeed &lt; -8) yspeed = -8;
 if(mouse_check_button_pressed(mb_left))
 {
-    var inst = instance_create(x,y,obj_grenade);
-    with(inst)
+    switch(currentitemslot)
     {
-        var _dir = point_direction(obj_player.x,obj_player.y,mouse_x,mouse_y);
-        dir = _dir;
-        spd = 12;
-        image_angle = _dir;
-    }
+        case 0:
+            var inst = instance_create(x,y,obj_grenade);
+            with(inst)
+            {
+                var _dir = point_direction(obj_player.x,obj_player.y,mouse_x,mouse_y);
+                dir = _dir;
+                spd = 12;
+                image_angle = _dir;
+            }
+            break;
+        case 1:
+            var inst = instance_create(x+lengthdir_x(44,arm_dir),y+lengthdir_y(9,arm_dir),obj_bullet);
+            with(inst)
+            {
+                direction = other.arm_dir;
+                image_angle = other.arm_dir;
+                speed = 24;
+            }
 }
+
 dir = point_direction(x,y,mouse_x,mouse_y);
 arm_dir = dir+(angle_difference(arm_dir,dir)/2);
 leg_dir = dir+(angle_difference(leg_dir,arm_dir)/2);
@@ -95,10 +117,26 @@ if(can_move_ || arm_index &gt; 0)
         arm_index -= arm_maxindex;
     }
 }
-if(x &gt; room_width) x -= room_width;
-if(x &lt; 0) x += room_width;
-if(y &gt; room_height) y -= room_height;
-if(y &lt; 0) y += room_height;
+if(x &gt; room_width)
+{
+    obj_view.x -= room_width;
+    x -= room_width;
+}
+if(x &lt; 0)
+{
+    obj_view.x += room_width;
+    x += room_width;
+}
+if(y &gt; room_height)
+{
+    obj_view.y -= room_height;
+    y -= room_height;
+}
+if(y &lt; 0)
+{
+    obj_view.y += room_height;
+    y += room_height;
+}
 </string>
           </argument>
         </arguments>
@@ -124,6 +162,15 @@ if(y &lt; 0) y += room_height;
             <string>draw_sprite_ext(spr_player_legs,arm_index,x,y,image_xscale,image_yscale,leg_dir,image_blend,image_alpha);
 draw_sprite_ext(spr_player_arms,arm_index,x,y,image_xscale,image_yscale,arm_dir,image_blend,image_alpha);
 draw_sprite_ext(spr_player_head,image_index,x,y,image_xscale,image_yscale,dir,image_blend,image_alpha);
+var item_ = ds_list_find_value(inventory_list,currentitemslot);
+if(!is_undefined(item_))
+{
+    var spr_ = get_item_sprite(item_);
+    if(spr_ != -1)
+    {
+        draw_sprite_ext(spr_,0,x,y,image_xscale,image_yscale,arm_dir,image_blend,image_alpha);
+    }
+}
 //draw_text(x+32,y,"xspeed: " + string(xspeed) + "#yspeed: " + string(yspeed));
 </string>
           </argument>

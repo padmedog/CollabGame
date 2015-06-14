@@ -4,7 +4,16 @@
     <Config>Configs\Default</Config>
   </Configs>
   <NewExtensions/>
-  <sounds name="sound"/>
+  <sounds name="sound">
+    <sound>sound\snd_zombie_hurt0</sound>
+    <sound>sound\snd_zombie_hurt1</sound>
+    <sound>sound\snd_zombie_hurt2</sound>
+    <sound>sound\snd_zombie_hurt3</sound>
+    <sound>sound\snd_pistol</sound>
+    <sound>sound\snd_rifle</sound>
+    <sound>sound\snd_player_hurt0</sound>
+    <sound>sound\snd_player_hurt1</sound>
+  </sounds>
   <sprites name="sprites">
     <sprite>sprites\spr_player</sprite>
     <sprite>sprites\spr_block</sprite>
@@ -13,12 +22,20 @@
     <sprite>sprites\spr_explosion</sprite>
     <sprite>sprites\spr_player_legs</sprite>
     <sprite>sprites\spr_player_arms</sprite>
+    <sprite>sprites\spr_player_pistol</sprite>
+    <sprite>sprites\spr_player_rifle</sprite>
     <sprite>sprites\spr_player_head</sprite>
+    <sprite>sprites\spr_zombie_rad</sprite>
+    <sprite>sprites\spr_zombie_normal</sprite>
+    <sprite>sprites\spr_bullet</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\bg_test</background>
   </backgrounds>
   <paths name="paths"/>
+  <scripts name="scripts">
+    <script>scripts\get_item_sprite.gml</script>
+  </scripts>
   <objects name="objects">
     <object>objects\obj_player</object>
     <object>objects\obj_grenade</object>
@@ -26,6 +43,8 @@
     <object>objects\obj_block_debris</object>
     <object>objects\obj_explosion</object>
     <object>objects\obj_view</object>
+    <object>objects\obj_zombie_normal</object>
+    <object>objects\obj_bullet</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rm_main</room>
