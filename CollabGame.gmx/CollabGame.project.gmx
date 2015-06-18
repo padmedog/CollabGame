@@ -35,6 +35,7 @@
   <paths name="paths"/>
   <scripts name="scripts">
     <script>scripts\get_item_sprite.gml</script>
+    <script>scripts\modulate_new.gml</script>
   </scripts>
   <objects name="objects">
     <object>objects\obj_player</object>

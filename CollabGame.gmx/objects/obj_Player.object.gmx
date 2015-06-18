@@ -39,8 +39,32 @@ inventory_list = ds_list_create();
      2 = Rifle
 */
 currentitemslot = 0;
+can_shoot = true;
 ds_list_add(inventory_list,1);
 ds_list_add(inventory_list,0);
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="2" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>can_shoot = true;
 </string>
           </argument>
         </arguments>
@@ -81,30 +105,70 @@ if(xspeed &gt; 8) xspeed = 8;
 if(yspeed &gt; 8) yspeed = 8;
 if(xspeed &lt; -8) xspeed = -8;
 if(yspeed &lt; -8) yspeed = -8;
-if(mouse_check_button_pressed(mb_left))
+if(mouse_check_button(mb_left))
 {
     switch(currentitemslot)
     {
         case 0:
-            var inst = instance_create(x,y,obj_grenade);
-            with(inst)
+            if(can_shoot &amp;&amp; mouse_check_button_pressed(mb_left))
             {
-                var _dir = point_direction(obj_player.x,obj_player.y,mouse_x,mouse_y);
-                dir = _dir;
-                spd = 12;
-                image_angle = _dir;
+                var inst = instance_create(x,y,obj_grenade);
+                with(inst)
+                {
+                    var _dir = point_direction(obj_player.x,obj_player.y,mouse_x,mouse_y);
+                    dir = _dir;
+                    spd = 12;
+                    image_angle = _dir;
+                }
+                can_shoot = false;
+                alarm[0] = 30;
             }
             break;
         case 1:
-            var inst = instance_create(x+lengthdir_x(44,arm_dir),y+lengthdir_y(9,arm_dir),obj_bullet);
-            with(inst)
+            if(can_shoot &amp;&amp; mouse_check_button_pressed(mb_left))
             {
-                direction = other.arm_dir;
-                image_angle = other.arm_dir;
-                speed = 24;
+                var inst = instance_create(x+lengthdir_x(44,arm_dir),y+lengthdir_y(9,arm_dir),obj_bullet);
+                with(inst)
+                {
+                    direction = other.arm_dir;
+                    image_angle = other.arm_dir;
+                    speed = 24;
+                }
+                can_shoot = false;
+                alarm[0] = 5
             }
+        case 2:
+            if(can_shoot)
+            {
+                var inst = instance_create(x+lengthdir_x(44,arm_dir),y+lengthdir_y(9,arm_dir),obj_bullet);
+                with(inst)
+                {
+                    direction = other.arm_dir;
+                    image_angle = other.arm_dir;
+                    speed = 18;
+                }
+                can_shoot = false;
+                alarm[0] = 3.75
+            }
+    }
 }
-
+if(mouse_wheel_up())
+{
+    currentitemslot += 1;
+}
+if(mouse_wheel_down())
+{
+    currentitemslot -= 1;
+}
+var size_ = ds_list_size(inventory_list);
+while(currentitemslot &gt; size_)
+{
+    currentitemslot -= size_;
+}
+while(currentitemslot &lt; 0)
+{
+    currentitemslot += size_;
+}
 dir = point_direction(x,y,mouse_x,mouse_y);
 arm_dir = dir+(angle_difference(arm_dir,dir)/2);
 leg_dir = dir+(angle_difference(leg_dir,arm_dir)/2);
@@ -162,16 +226,16 @@ if(y &lt; 0)
             <string>draw_sprite_ext(spr_player_legs,arm_index,x,y,image_xscale,image_yscale,leg_dir,image_blend,image_alpha);
 draw_sprite_ext(spr_player_arms,arm_index,x,y,image_xscale,image_yscale,arm_dir,image_blend,image_alpha);
 draw_sprite_ext(spr_player_head,image_index,x,y,image_xscale,image_yscale,dir,image_blend,image_alpha);
-var item_ = ds_list_find_value(inventory_list,currentitemslot);
-if(!is_undefined(item_))
+//var item_ = ds_list_find_value(inventory_list,currentitemslot);
+//if(!is_undefined(item_))
 {
-    var spr_ = get_item_sprite(item_);
+    var spr_ = get_item_sprite(currentitemslot);
     if(spr_ != -1)
     {
         draw_sprite_ext(spr_,0,x,y,image_xscale,image_yscale,arm_dir,image_blend,image_alpha);
     }
 }
-//draw_text(x+32,y,"xspeed: " + string(xspeed) + "#yspeed: " + string(yspeed));
+draw_text(x+32,y,"xspeed: " + string(xspeed) + "#yspeed: " + string(yspeed) + "#slot: " + string(currentitemslot));
 </string>
           </argument>
         </arguments>
