@@ -42,6 +42,7 @@ currentitemslot = 0;
 can_shoot = true;
 ds_list_add(inventory_list,1);
 ds_list_add(inventory_list,0);
+ds_list_add(inventory_list,2);
 </string>
           </argument>
         </arguments>
@@ -89,13 +90,24 @@ ds_list_add(inventory_list,0);
             <kind>1</kind>
             <string>xspeed += (keyboard_check(vk_right)-keyboard_check(vk_left));
 yspeed += (keyboard_check(vk_down)-keyboard_check(vk_up));
+var has_collision = false;
 while(place_meeting(x+xspeed,y,obj_block))
 {
     xspeed -= sign(xspeed);
+    has_collision = true;
 }
 while(place_meeting(x,y+yspeed,obj_block))
 {
     yspeed -= sign(yspeed);
+    has_collision = true;
+}
+if(has_collision)
+{
+    while(place_meeting(x+xspeed,y+yspeed,obj_block))
+    {
+        xspeed -= sign(xspeed);
+        yspeed -= sign(yspeed);
+    }
 }
 x += xspeed;
 y += yspeed;
@@ -107,7 +119,7 @@ if(xspeed &lt; -8) xspeed = -8;
 if(yspeed &lt; -8) yspeed = -8;
 if(mouse_check_button(mb_left))
 {
-    switch(currentitemslot)
+    switch(ds_list_find_index(inventory_list,currentitemslot))
     {
         case 0:
             if(can_shoot &amp;&amp; mouse_check_button_pressed(mb_left))
@@ -127,31 +139,34 @@ if(mouse_check_button(mb_left))
         case 1:
             if(can_shoot &amp;&amp; mouse_check_button_pressed(mb_left))
             {
-                var inst = instance_create(x+lengthdir_x(44,arm_dir),y+lengthdir_y(9,arm_dir),obj_bullet);
+                var inst = instance_create(x+lengthdir_x(24,arm_dir-10),y+lengthdir_y(24,arm_dir-10),obj_bullet);
                 with(inst)
                 {
                     direction = other.arm_dir;
                     image_angle = other.arm_dir;
                     speed = 24;
                 }
+                audio_play_sound(snd_pistol,5,false);
                 can_shoot = false;
                 alarm[0] = 5
             }
         case 2:
             if(can_shoot)
             {
-                var inst = instance_create(x+lengthdir_x(44,arm_dir),y+lengthdir_y(9,arm_dir),obj_bullet);
+                var inst = instance_create(x+lengthdir_x(24,arm_dir-10),y+lengthdir_y(24,arm_dir-10),obj_bullet);
                 with(inst)
                 {
                     direction = other.arm_dir;
                     image_angle = other.arm_dir;
                     speed = 18;
                 }
+                audio_play_sound(snd_rifle,5,false);
                 can_shoot = false;
                 alarm[0] = 3.75
             }
     }
 }
+var size_ = ds_list_size(inventory_list)-1;
 if(mouse_wheel_up())
 {
     currentitemslot += 1;
@@ -160,14 +175,13 @@ if(mouse_wheel_down())
 {
     currentitemslot -= 1;
 }
-var size_ = ds_list_size(inventory_list);
 while(currentitemslot &gt; size_)
 {
-    currentitemslot -= size_;
+    currentitemslot -= size_+1;
 }
 while(currentitemslot &lt; 0)
 {
-    currentitemslot += size_;
+    currentitemslot += size_+1;
 }
 dir = point_direction(x,y,mouse_x,mouse_y);
 arm_dir = dir+(angle_difference(arm_dir,dir)/2);
@@ -206,6 +220,36 @@ if(y &lt; 0)
         </arguments>
       </action>
     </event>
+    <event eventtype="8" enumb="64">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>var _size = ds_list_size(inventory_list);
+for(i = 0; i &lt; _size; i++)
+{
+    var spr_ = get_inventory_sprite(ds_list_find_index(inventory_list,i));
+    var enabled_ = (i==currentitemslot)/2
+    draw_sprite_ext(spr_,0,(i*64)+(sprite_get_xoffset(spr_)*2),(sprite_get_yoffset(spr_)*2),2,2,0,c_white,0.5+enabled_);
+}
+draw_text(0,80,"Zombies: " + string(instance_number(obj_zombie_normal)));
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="8" enumb="0">
       <action>
         <libid>1</libid>
@@ -226,16 +270,14 @@ if(y &lt; 0)
             <string>draw_sprite_ext(spr_player_legs,arm_index,x,y,image_xscale,image_yscale,leg_dir,image_blend,image_alpha);
 draw_sprite_ext(spr_player_arms,arm_index,x,y,image_xscale,image_yscale,arm_dir,image_blend,image_alpha);
 draw_sprite_ext(spr_player_head,image_index,x,y,image_xscale,image_yscale,dir,image_blend,image_alpha);
-//var item_ = ds_list_find_value(inventory_list,currentitemslot);
-//if(!is_undefined(item_))
 {
-    var spr_ = get_item_sprite(currentitemslot);
+    var spr_ = get_item_sprite(ds_list_find_index(inventory_list,currentitemslot));
     if(spr_ != -1)
     {
         draw_sprite_ext(spr_,0,x,y,image_xscale,image_yscale,arm_dir,image_blend,image_alpha);
     }
 }
-draw_text(x+32,y,"xspeed: " + string(xspeed) + "#yspeed: " + string(yspeed) + "#slot: " + string(currentitemslot));
+//draw_text(x+32,y,"xspeed: " + string(xspeed) + "#yspeed: " + string(yspeed) + "#slot: " + string(currentitemslot) + "#slotcount: " + string(ds_list_size(inventory_list)));
 </string>
           </argument>
         </arguments>

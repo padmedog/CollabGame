@@ -28,6 +28,10 @@
     <sprite>sprites\spr_zombie_rad</sprite>
     <sprite>sprites\spr_zombie_normal</sprite>
     <sprite>sprites\spr_bullet</sprite>
+    <sprite>sprites\spr_pickup_grenade</sprite>
+    <sprite>sprites\spr_pistol</sprite>
+    <sprite>sprites\spr_rifle</sprite>
+    <sprite>sprites\spr_blood</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\bg_test</background>
@@ -35,6 +39,7 @@
   <paths name="paths"/>
   <scripts name="scripts">
     <script>scripts\get_item_sprite.gml</script>
+    <script>scripts\get_inventory_sprite.gml</script>
     <script>scripts\modulate_new.gml</script>
   </scripts>
   <objects name="objects">
@@ -46,6 +51,8 @@
     <object>objects\obj_view</object>
     <object>objects\obj_zombie_normal</object>
     <object>objects\obj_bullet</object>
+    <object>objects\obj_blood</object>
+    <object>objects\obj_zombiegen</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rm_main</room>
