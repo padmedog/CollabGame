@@ -35,6 +35,7 @@
   </sprites>
   <backgrounds name="background">
     <background>background\bg_test</background>
+    <background>background\tex_wall</background>
   </backgrounds>
   <paths name="paths"/>
   <scripts name="scripts">
@@ -53,8 +54,11 @@
     <object>objects\obj_bullet</object>
     <object>objects\obj_blood</object>
     <object>objects\obj_zombiegen</object>
+    <object>objects\obj_timescale</object>
+    <object>objects\obj_init</object>
   </objects>
   <rooms name="rooms">
+    <room>rooms\rm_init</room>
     <room>rooms\rm_main</room>
   </rooms>
   <help>

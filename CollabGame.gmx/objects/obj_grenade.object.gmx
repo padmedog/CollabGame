@@ -28,7 +28,7 @@
             <string>angle = 0;
 xspeed = 0;
 yspeed = 0;
-alarm[0] = 60;
+alarm[0] = 60/global.timescale;
 </string>
           </argument>
         </arguments>
@@ -75,9 +75,9 @@ instance_destroy();
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>angle += spd*100;
+            <string>angle += spd*100*global.timescale;
 image_angle = dir;
-spd -= sign(spd);
+spd -= sign(spd)*global.timescale;
 xspeed = lengthdir_x(spd,dir);
 yspeed = lengthdir_y(spd,dir);
 var bounce_horiz = false;
@@ -88,7 +88,7 @@ var orig_yspd = yspeed;
 if(place_meeting(x+xspeed,y,obj_block))
 {
     bounce_horiz = true;
-    xspeed -= sign(xspeed);
+    xspeed -= sign(xspeed)*global.timescale;
 //    count++;
 //    if(count &gt; orig_xspd) break;
 }
@@ -97,7 +97,7 @@ if(bounce_horiz) xspeed = -xspeed;
 if(place_meeting(x,y+yspeed,obj_block))
 {
     bounce_verti = true;
-    yspeed -= sign(yspeed);
+    yspeed -= sign(yspeed)*global.timescale;
 //    count++;
 //    if(count &gt; orig_yspd) break;
 }

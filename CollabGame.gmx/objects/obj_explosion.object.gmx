@@ -49,7 +49,7 @@ endsize = 9;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>size = (size+size+size+size+size+size+size+endsize)/8;
+            <string>size -= (size-(((size*7)+endsize)/(8)))*global.timescale;
 image_xscale = size;
 image_yscale = size;
 image_alpha = 1-(size/endsize);

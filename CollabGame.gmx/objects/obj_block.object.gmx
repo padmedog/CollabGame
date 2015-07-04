@@ -29,7 +29,6 @@
 image_index = 0;
 damage = 0;
 can_hit = true;
-//instance_destroy();
 </string>
           </argument>
         </arguments>
@@ -58,8 +57,8 @@ can_hit = true;
     with(inst)
     {
         direction = irandom(360);
-        speed = irandom(4);
-        alarm[0] = 15;
+        speed = irandom(4)*global.timescale;
+        alarm[0] = 15/global.timescale;
     }
 }
 </string>
@@ -109,6 +108,7 @@ can_hit = true;
             <kind>1</kind>
             <string>if(damage &gt;= image_number) instance_destroy();
 image_index = damage;
+alarm[0] *= global.ts_difference;
 </string>
           </argument>
         </arguments>
@@ -134,7 +134,7 @@ image_index = damage;
             <string>if(can_hit)
 {
     can_hit = false;
-    alarm[0] = 20;
+    alarm[0] = 20/global.timescale;
     damage += 1;
 }
 </string>

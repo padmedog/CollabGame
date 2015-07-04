@@ -26,12 +26,20 @@
           <argument>
             <kind>1</kind>
             <string>path_ = path_add();
-mp_potential_path(path_,obj_player.x,obj_player.y,4,4,false);
-path_start(path_,4,path_action_stop,true);
-canpath = true;
+max_det_dist = 256;
+if(point_distance(x,y,obj_player.x,obj_player.y) &lt; max_det_dist)
+{
+    mp_potential_path(path_,obj_player.x,obj_player.y,4,4,false);
+    path_start(path_,2*global.timescale,path_action_stop,true);
+    canpath = true;
+}
 image_speed = 0;
 image_index = 0;
-hlth = 64;
+hlth = 16;
+prevx = x;
+prevy = y;
+prevprevx = prevx;
+prevprevy = prevy
 </string>
           </argument>
         </arguments>
@@ -60,6 +68,33 @@ hlth = 64;
         </arguments>
       </action>
     </event>
+    <event eventtype="3" enumb="2">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>prevprevx = prevx;
+prevprevy = prevy;
+prevx = x;
+prevy = y;
+
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
     <event eventtype="3" enumb="0">
       <action>
         <libid>1</libid>
@@ -77,15 +112,18 @@ hlth = 64;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if(floor(obj_player.x) != floor(obj_player.xprevious) || floor(obj_player.y) != floor(obj_player.yprevious))
+            <string>if(point_distance(x,y,obj_player.x,obj_player.y) &lt; max_det_dist)
 {
-    path_end();
-    mp_potential_path(path_,obj_player.x,obj_player.y,4,4,false);
-    path_start(path_,2,path_action_stop,true);
-    canpath = false;
-    alarm[0] = 120;
+    if(floor(obj_player.x) != floor(obj_player.xprevious) || floor(obj_player.y) != floor(obj_player.yprevious))
+    {
+        path_end();
+        mp_potential_path(path_,obj_player.x,obj_player.y,4,4,false);
+        path_start(path_,2*global.timescale,path_action_stop,true);
+        canpath = false;
+        alarm[0] = 120/global.timescale;
+    }
+    image_angle = point_direction(prevprevx,prevprevy,x,y);
 }
-image_angle = point_direction(xprevious,yprevious,x,y);
 if(hlth &lt;= 0)
 {
     for(i = 0; i &lt; 24; i++)
@@ -94,6 +132,7 @@ if(hlth &lt;= 0)
     }
     instance_destroy();
 }
+path_speed *= global.ts_difference;
 </string>
           </argument>
         </arguments>
@@ -120,7 +159,7 @@ if(hlth &lt;= 0)
 {
     instance_create(x,y,obj_blood);
 }
-hlth -= 8;
+hlth -= other.damage;
 with(other) instance_destroy();
 </string>
           </argument>

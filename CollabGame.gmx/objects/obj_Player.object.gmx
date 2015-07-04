@@ -88,8 +88,8 @@ ds_list_add(inventory_list,2);
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>xspeed += (keyboard_check(vk_right)-keyboard_check(vk_left));
-yspeed += (keyboard_check(vk_down)-keyboard_check(vk_up));
+            <string>xspeed += (keyboard_check(vk_right)-keyboard_check(vk_left))*global.timescale;
+yspeed += (keyboard_check(vk_down)-keyboard_check(vk_up))*global.timescale;
 var has_collision = false;
 while(place_meeting(x+xspeed,y,obj_block))
 {
@@ -101,7 +101,7 @@ while(place_meeting(x,y+yspeed,obj_block))
     yspeed -= sign(yspeed);
     has_collision = true;
 }
-if(has_collision)
+if(!has_collision)
 {
     while(place_meeting(x+xspeed,y+yspeed,obj_block))
     {
@@ -111,8 +111,8 @@ if(has_collision)
 }
 x += xspeed;
 y += yspeed;
-xspeed /= 1.5;
-yspeed /= 1.5;
+xspeed /= (0.5/global.timescale)+1;
+yspeed /= (0.5/global.timescale)+1;
 if(xspeed &gt; 8) xspeed = 8;
 if(yspeed &gt; 8) yspeed = 8;
 if(xspeed &lt; -8) xspeed = -8;
@@ -129,11 +129,11 @@ if(mouse_check_button(mb_left))
                 {
                     var _dir = point_direction(obj_player.x,obj_player.y,mouse_x,mouse_y);
                     dir = _dir;
-                    spd = 12;
+                    spd = 12*global.timescale
                     image_angle = _dir;
                 }
                 can_shoot = false;
-                alarm[0] = 30;
+                alarm[0] = 30/global.timescale;
             }
             break;
         case 1:
@@ -144,12 +144,14 @@ if(mouse_check_button(mb_left))
                 {
                     direction = other.arm_dir;
                     image_angle = other.arm_dir;
-                    speed = 24;
+                    speed = 24*global.timescale;
+                    damage = 8;
                 }
                 audio_play_sound(snd_pistol,5,false);
                 can_shoot = false;
-                alarm[0] = 5
+                alarm[0] = 5/global.timescale;
             }
+            break;
         case 2:
             if(can_shoot)
             {
@@ -158,12 +160,14 @@ if(mouse_check_button(mb_left))
                 {
                     direction = other.arm_dir;
                     image_angle = other.arm_dir;
-                    speed = 18;
+                    speed = 18*global.timescale;
+                    damage = 4;
                 }
                 audio_play_sound(snd_rifle,5,false);
                 can_shoot = false;
-                alarm[0] = 3.75
+                alarm[0] = 3.75/global.timescale;
             }
+            break;
     }
 }
 var size_ = ds_list_size(inventory_list)-1;
@@ -186,7 +190,8 @@ while(currentitemslot &lt; 0)
 dir = point_direction(x,y,mouse_x,mouse_y);
 arm_dir = dir+(angle_difference(arm_dir,dir)/2);
 leg_dir = dir+(angle_difference(leg_dir,arm_dir)/2);
-var can_move_ = xspeed &gt; 1.5 || yspeed &gt; 1.5 || xspeed &lt; -1.5 || yspeed &lt; -1.5;
+var timescaleat15 = 1.5*global.timescale;
+var can_move_ = xspeed &gt; timescaleat15 || yspeed &gt; timescaleat15 || xspeed &lt; -timescaleat15 || yspeed &lt; -timescaleat15;
 if(can_move_ || arm_index &gt; 0)
 {
     arm_index++;
@@ -215,6 +220,7 @@ if(y &lt; 0)
     obj_view.y += room_height;
     y += room_height;
 }
+alarm[0] /= global.ts_difference;
 </string>
           </argument>
         </arguments>
@@ -245,6 +251,7 @@ for(i = 0; i &lt; _size; i++)
     draw_sprite_ext(spr_,0,(i*64)+(sprite_get_xoffset(spr_)*2),(sprite_get_yoffset(spr_)*2),2,2,0,c_white,0.5+enabled_);
 }
 draw_text(0,80,"Zombies: " + string(instance_number(obj_zombie_normal)));
+draw_text(0,120,"global.ts_lowfps: " + string(global.ts_lowfps) + "#global.ts_difference: " + string(global.ts_difference));
 </string>
           </argument>
         </arguments>

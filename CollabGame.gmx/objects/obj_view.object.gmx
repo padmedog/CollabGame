@@ -25,7 +25,7 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>spd = 16;
+            <string>spd = 16*global.timescale;
 </string>
           </argument>
         </arguments>
@@ -48,7 +48,8 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>x = ((x*spd)+obj_player.x)/(1+spd);
+            <string>spd *= global.ts_difference;
+x = ((x*spd)+obj_player.x)/(1+spd);
 y = ((y*spd)+obj_player.y)/(1+spd);
 view_xview[0] = x-(view_wview[0]/2);
 view_yview[0] = y-(view_hview[0]/2);
