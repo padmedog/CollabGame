@@ -28,7 +28,7 @@
             <string>gravity = 1*global.timescale;
 hspeed = (random(8)-4)*global.timescale;
 vspeed = -random(4)*global.timescale;
-alarm[0] = 15/global.timescale;
+alarm[0] = 6/global.timescale;
 
 </string>
           </argument>

@@ -49,13 +49,36 @@
           <argument>
             <kind>1</kind>
             <string>alarm[0] = ceil(5/global.timescale);
-show_debug_message(global.timescale);
+var woh_ = choose(0,1,2,3);
 var x_ = random(room_width);
 var y_ = random(room_height);
 if(instance_number(obj_zombie_normal) &lt; 32)
 {
-    instance_create(x_,y_,obj_zombie_normal);
+    var rwd2 = room_width/2;
+    if(x_ &lt; rwd2) x_ -= rwd2;
+    if(x_ &gt;= rwd2) x_ += rwd2;
+    var rhd2 = room_height/2;
+    if(y_ &lt; rhd2) y_ -= rhd2;
+    if(y_ &gt;= rhd2) y_ += rhd2;
+    switch(woh_)
+    {
+        case 0:
+            instance_create(x_,0,obj_zombie_normal);
+            break;
+        case 1:
+            instance_create(0,y_,obj_zombie_normal);
+            break;
+        case 2:
+            instance_create(x_,room_height,obj_zombie_normal);
+            break;
+        case 3:
+            instance_create(room_width,y_,obj_zombie_normal);
+            break;
+        default:
+            break;
+    }
 }
+//    if(!(x_ &gt; view_xview[0] &amp;&amp; x_ &lt; view_xview[0]+view_wview[0] &amp;&amp; y_ &gt; view_yview[0] &amp;&amp; y_ &lt; view_yview[0]+view_hview[0]))
 </string>
           </argument>
         </arguments>

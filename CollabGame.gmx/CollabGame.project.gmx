@@ -9,6 +9,10 @@
     <sound>sound\snd_zombie_hurt1</sound>
     <sound>sound\snd_zombie_hurt2</sound>
     <sound>sound\snd_zombie_hurt3</sound>
+    <sound>sound\snd_block_hit0</sound>
+    <sound>sound\snd_block_hit1</sound>
+    <sound>sound\snd_block_hit2</sound>
+    <sound>sound\snd_block_hit3</sound>
     <sound>sound\snd_pistol</sound>
     <sound>sound\snd_rifle</sound>
     <sound>sound\snd_player_hurt0</sound>
@@ -32,17 +36,28 @@
     <sprite>sprites\spr_pistol</sprite>
     <sprite>sprites\spr_rifle</sprite>
     <sprite>sprites\spr_blood</sprite>
+    <sprite>sprites\spr_player_healthbar</sprite>
+    <sprite>sprites\spr_deadmessage</sprite>
+    <sprite>sprites\spr_continue</sprite>
+    <sprite>sprites\spr_gotohiscore</sprite>
+    <sprite>sprites\spr_loading</sprite>
   </sprites>
   <backgrounds name="background">
     <background>background\bg_test</background>
     <background>background\tex_wall</background>
+    <background>background\ef_vignette</background>
   </backgrounds>
   <paths name="paths"/>
   <scripts name="scripts">
     <script>scripts\get_item_sprite.gml</script>
     <script>scripts\get_inventory_sprite.gml</script>
     <script>scripts\modulate_new.gml</script>
+    <script>scripts\zombie_collide.gml</script>
   </scripts>
+  <fonts name="fonts">
+    <font>fonts\fnt_highscores</font>
+    <font>fonts\fnt_score</font>
+  </fonts>
   <objects name="objects">
     <object>objects\obj_player</object>
     <object>objects\obj_grenade</object>
@@ -56,10 +71,18 @@
     <object>objects\obj_zombiegen</object>
     <object>objects\obj_timescale</object>
     <object>objects\obj_init</object>
+    <object>objects\obj_deadmessage</object>
+    <object>objects\obj_vignette</object>
+    <object>objects\obj_continue</object>
+    <object>objects\obj_gotohiscore</object>
+    <object>objects\obj_highscores</object>
+    <object>objects\obj_scorekeeper</object>
   </objects>
   <rooms name="rooms">
     <room>rooms\rm_init</room>
     <room>rooms\rm_main</room>
+    <room>rooms\rm_dead</room>
+    <room>rooms\rm_highscores</room>
   </rooms>
   <help>
     <rtf>help.rtf</rtf>

@@ -48,7 +48,7 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>spd *= global.ts_difference;
+            <string>spd /= global.ts_difference;
 x = ((x*spd)+obj_player.x)/(1+spd);
 y = ((y*spd)+obj_player.y)/(1+spd);
 view_xview[0] = x-(view_wview[0]/2);

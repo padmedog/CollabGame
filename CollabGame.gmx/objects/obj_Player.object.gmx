@@ -32,6 +32,7 @@ arm_index = 0;
 arm_maxindex = sprite_get_number(spr_player_arms)-1;
 arm_dir = 0;
 leg_dir = 0;
+hlth = 30;
 inventory_list = ds_list_create();
 /*Items:
      0 = Grenade
@@ -113,10 +114,10 @@ x += xspeed;
 y += yspeed;
 xspeed /= (0.5/global.timescale)+1;
 yspeed /= (0.5/global.timescale)+1;
-if(xspeed &gt; 8) xspeed = 8;
-if(yspeed &gt; 8) yspeed = 8;
-if(xspeed &lt; -8) xspeed = -8;
-if(yspeed &lt; -8) yspeed = -8;
+//if(xspeed &gt; 8) xspeed = 8;
+//if(yspeed &gt; 8) yspeed = 8;
+//if(xspeed &lt; -8) xspeed = -8;
+//if(yspeed &lt; -8) yspeed = -8;
 if(mouse_check_button(mb_left))
 {
     switch(ds_list_find_index(inventory_list,currentitemslot))
@@ -139,7 +140,7 @@ if(mouse_check_button(mb_left))
         case 1:
             if(can_shoot &amp;&amp; mouse_check_button_pressed(mb_left))
             {
-                var inst = instance_create(x+lengthdir_x(24,arm_dir-10),y+lengthdir_y(24,arm_dir-10),obj_bullet);
+                var inst = instance_create(x+lengthdir_x(44,arm_dir)+lengthdir_x(12,arm_dir+90),y+lengthdir_y(44,arm_dir)+lengthdir_y(12,arm_dir+90),obj_bullet);
                 with(inst)
                 {
                     direction = other.arm_dir;
@@ -147,7 +148,7 @@ if(mouse_check_button(mb_left))
                     speed = 24*global.timescale;
                     damage = 8;
                 }
-                audio_play_sound(snd_pistol,5,false);
+                audio_play_sound(snd_pistol,2,false);
                 can_shoot = false;
                 alarm[0] = 5/global.timescale;
             }
@@ -155,7 +156,7 @@ if(mouse_check_button(mb_left))
         case 2:
             if(can_shoot)
             {
-                var inst = instance_create(x+lengthdir_x(24,arm_dir-10),y+lengthdir_y(24,arm_dir-10),obj_bullet);
+                var inst = instance_create(x+lengthdir_x(52,arm_dir)+lengthdir_x(8,arm_dir+90),y+lengthdir_y(52,arm_dir)+lengthdir_y(8,arm_dir+90),obj_bullet);
                 with(inst)
                 {
                     direction = other.arm_dir;
@@ -163,7 +164,7 @@ if(mouse_check_button(mb_left))
                     speed = 18*global.timescale;
                     damage = 4;
                 }
-                audio_play_sound(snd_rifle,5,false);
+                audio_play_sound(snd_rifle,2,false);
                 can_shoot = false;
                 alarm[0] = 3.75/global.timescale;
             }
@@ -202,25 +203,58 @@ if(can_move_ || arm_index &gt; 0)
 }
 if(x &gt; room_width)
 {
-    obj_view.x -= room_width;
-    x -= room_width;
+//    obj_view.x -= room_width;
+    x = room_width;
 }
 if(x &lt; 0)
 {
-    obj_view.x += room_width;
-    x += room_width;
+//    obj_view.x += room_width;
+    x = 0;
 }
 if(y &gt; room_height)
 {
-    obj_view.y -= room_height;
-    y -= room_height;
+//    obj_view.y -= room_height;
+    y = room_height;
 }
 if(y &lt; 0)
 {
-    obj_view.y += room_height;
-    y += room_height;
+//    obj_view.y += room_height;
+    y = 0;
 }
+if(hlth &lt;= 0) room_goto(rm_dead);
 alarm[0] /= global.ts_difference;
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="4" ename="obj_zombie_normal">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>var dir_ = point_direction(other.x,other.y,x,y);
+xspeed += lengthdir_x(16,dir_);
+yspeed += lengthdir_y(16,dir_);
+hlth -= 5;
+for(i = 0; i &lt; 8; i++)
+{
+    instance_create(x,y,obj_blood);
+}
+var snd_ = choose(snd_player_hurt0,snd_player_hurt1);
+audio_play_sound(snd_,6,false);
 </string>
           </argument>
         </arguments>
@@ -250,8 +284,8 @@ for(i = 0; i &lt; _size; i++)
     var enabled_ = (i==currentitemslot)/2
     draw_sprite_ext(spr_,0,(i*64)+(sprite_get_xoffset(spr_)*2),(sprite_get_yoffset(spr_)*2),2,2,0,c_white,0.5+enabled_);
 }
-draw_text(0,80,"Zombies: " + string(instance_number(obj_zombie_normal)));
-draw_text(0,120,"global.ts_lowfps: " + string(global.ts_lowfps) + "#global.ts_difference: " + string(global.ts_difference));
+/*draw_text(0,80,"Zombies: " + string(instance_number(obj_zombie_normal)));
+draw_text(0,120,"global.ts_lowfps: " + string(global.ts_lowfps) + "#global.ts_difference: " + string(global.ts_difference));*/
 </string>
           </argument>
         </arguments>
@@ -276,14 +310,25 @@ draw_text(0,120,"global.ts_lowfps: " + string(global.ts_lowfps) + "#global.ts_di
             <kind>1</kind>
             <string>draw_sprite_ext(spr_player_legs,arm_index,x,y,image_xscale,image_yscale,leg_dir,image_blend,image_alpha);
 draw_sprite_ext(spr_player_arms,arm_index,x,y,image_xscale,image_yscale,arm_dir,image_blend,image_alpha);
-draw_sprite_ext(spr_player_head,image_index,x,y,image_xscale,image_yscale,dir,image_blend,image_alpha);
 {
     var spr_ = get_item_sprite(ds_list_find_index(inventory_list,currentitemslot));
     if(spr_ != -1)
     {
-        draw_sprite_ext(spr_,0,x,y,image_xscale,image_yscale,arm_dir,image_blend,image_alpha);
+        draw_sprite_ext(spr_,0,x,y,image_xscale,image_yscale,dir,image_blend,image_alpha);
     }
 }
+draw_sprite_ext(spr_player_head,image_index,x,y,image_xscale,image_yscale,dir,image_blend,image_alpha);
+draw_sprite(spr_player_healthbar,hlth,x,y);
+/*var col_ = draw_get_color();
+draw_set_color(c_red);
+with(obj_zombie_normal)
+{
+    var dist_ = point_distance(x,y,obj_player.x,obj_player.y);
+    var clr_ = make_color_hsv((1/dist_)*255,255,255);
+    draw_set_color(clr_)
+    draw_line(obj_player.x,obj_player.y,x,y);
+}
+draw_set_color(col_);*/
 //draw_text(x+32,y,"xspeed: " + string(xspeed) + "#yspeed: " + string(yspeed) + "#slot: " + string(currentitemslot) + "#slotcount: " + string(ds_list_size(inventory_list)));
 </string>
           </argument>

@@ -77,7 +77,7 @@ instance_destroy();
             <kind>1</kind>
             <string>angle += spd*100*global.timescale;
 image_angle = dir;
-spd -= sign(spd)*global.timescale;
+spd /= (0.3*global.timescale)+1;
 xspeed = lengthdir_x(spd,dir);
 yspeed = lengthdir_y(spd,dir);
 var bounce_horiz = false;
@@ -104,6 +104,8 @@ if(place_meeting(x,y+yspeed,obj_block))
 if(bounce_verti) yspeed = -yspeed;
 x += xspeed;
 y += yspeed;
+spd *= global.ts_difference;
+alarm[0] /= global.ts_difference;
 </string>
           </argument>
         </arguments>

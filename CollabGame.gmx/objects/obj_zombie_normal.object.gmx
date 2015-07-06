@@ -25,27 +25,28 @@
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>path_ = path_add();
-max_det_dist = 256;
-if(point_distance(x,y,obj_player.x,obj_player.y) &lt; max_det_dist)
-{
-    mp_potential_path(path_,obj_player.x,obj_player.y,4,4,false);
-    path_start(path_,2*global.timescale,path_action_stop,true);
-    canpath = true;
-}
+            <string>xspeed = 0;
+yspeed = 0;
+dir = 0;
+target_x = 0;
+target_y = 0;
+target_object = obj_player;
+arm_loss = choose(0,1);
+rot_speed = 2;
 image_speed = 0;
 image_index = 0;
 hlth = 16;
-prevx = x;
-prevy = y;
-prevprevx = prevx;
-prevprevy = prevy
+max_hlth = 16;
+can_explode_dmg = true;
+can_hit_block = true;
+//false variable
+damage = 0;
 </string>
           </argument>
         </arguments>
       </action>
     </event>
-    <event eventtype="2" enumb="0">
+    <event eventtype="1" enumb="0">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -62,34 +63,7 @@ prevprevy = prevy
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>canpath = true;
-</string>
-          </argument>
-        </arguments>
-      </action>
-    </event>
-    <event eventtype="3" enumb="2">
-      <action>
-        <libid>1</libid>
-        <id>603</id>
-        <kind>7</kind>
-        <userelative>0</userelative>
-        <isquestion>0</isquestion>
-        <useapplyto>-1</useapplyto>
-        <exetype>2</exetype>
-        <functionname></functionname>
-        <codestring></codestring>
-        <whoName>self</whoName>
-        <relative>0</relative>
-        <isnot>0</isnot>
-        <arguments>
-          <argument>
-            <kind>1</kind>
-            <string>prevprevx = prevx;
-prevprevy = prevy;
-prevx = x;
-prevy = y;
-
+            <string>obj_scorekeeper.score_ += 10;
 </string>
           </argument>
         </arguments>
@@ -112,17 +86,19 @@ prevy = y;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>if(point_distance(x,y,obj_player.x,obj_player.y) &lt; max_det_dist)
+            <string>var swidthd2 = sprite_width/2;
+//if(rectangle_in_rectangle(x-swidthd2,y-swidthd2,x+swidthd2,y+swidthd2
+//    ,view_xview[0],view_yview[0],view_xview[0]+view_wview[0],view_yview[0]+view_hview))
 {
-    if(floor(obj_player.x) != floor(obj_player.xprevious) || floor(obj_player.y) != floor(obj_player.yprevious))
-    {
-        path_end();
-        mp_potential_path(path_,obj_player.x,obj_player.y,4,4,false);
-        path_start(path_,2*global.timescale,path_action_stop,true);
-        canpath = false;
-        alarm[0] = 120/global.timescale;
-    }
-    image_angle = point_direction(prevprevx,prevprevy,x,y);
+    target_x = target_object.x;
+    target_y = target_object.y;
+    dir = point_direction(x,y,target_x,target_y);
+    xspeed += lengthdir_x(1,dir)*global.timescale;
+    yspeed += lengthdir_y(1,dir)*global.timescale;
+    xspeed /= (0.7/global.timescale)+1;
+    yspeed /= (0.7/global.timescale)+1;;
+    zombie_collide(obj_block);
+    //zombie_collide(obj_zombie_normal);
 }
 if(hlth &lt;= 0)
 {
@@ -132,13 +108,15 @@ if(hlth &lt;= 0)
     }
     instance_destroy();
 }
-path_speed *= global.ts_difference;
+xspeed *= global.ts_difference;
+yspeed *= global.ts_difference;
+alarm[0] /= global.ts_difference;
 </string>
           </argument>
         </arguments>
       </action>
     </event>
-    <event eventtype="4" ename="obj_bullet">
+    <event eventtype="4" ename="obj_explosion">
       <action>
         <libid>1</libid>
         <id>603</id>
@@ -155,12 +133,48 @@ path_speed *= global.ts_difference;
         <arguments>
           <argument>
             <kind>1</kind>
-            <string>for(i = 0; i &lt; 6; i++)
+            <string>if(can_explode_dmg)
 {
-    instance_create(x,y,obj_blood);
+    can_explode_dmg = false;
+    alarm[0] = 15/global.timescale;
+    hlth -= 8;
 }
-hlth -= other.damage;
-with(other) instance_destroy();
+</string>
+          </argument>
+        </arguments>
+      </action>
+    </event>
+    <event eventtype="8" enumb="0">
+      <action>
+        <libid>1</libid>
+        <id>603</id>
+        <kind>7</kind>
+        <userelative>0</userelative>
+        <isquestion>0</isquestion>
+        <useapplyto>-1</useapplyto>
+        <exetype>2</exetype>
+        <functionname></functionname>
+        <codestring></codestring>
+        <whoName>self</whoName>
+        <relative>0</relative>
+        <isnot>0</isnot>
+        <arguments>
+          <argument>
+            <kind>1</kind>
+            <string>var ind_ = 0;
+if(hlth &gt; max_hlth*(2/3))
+{
+    ind_ = 0;
+}
+else if(hlth &gt; max_hlth/3)
+{
+    ind_ = arm_loss+1;
+}
+else
+{
+    ind_ = 3;
+}
+draw_sprite_ext(sprite_index,ind_,x,y,image_xscale,image_yscale,dir,image_blend,image_alpha);
 </string>
           </argument>
         </arguments>
